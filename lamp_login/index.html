@@ -1,0 +1,350 @@
+<!DOCTYPE html>
+<html lang="hi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lamp_Login_page by crusher bhai</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            overflow: hidden;
+            background: #0a0e27;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            transition: background 0.5s ease;
+        }
+
+        body.light-on {
+            background: #1a1f3a;
+        }
+
+        .lamp-container {
+            position: relative;
+            cursor: pointer;
+            transition: transform 0.3s ease;
+        }
+
+        .lamp-container:hover {
+            transform: scale(1.05);
+        }
+
+        .lamp-shade {
+            width: 150px;
+            height: 100px;
+            background: linear-gradient(to bottom, #4a4a4a, #2a2a2a);
+            border-radius: 0 0 50% 50%;
+            position: relative;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+        }
+
+        .lamp-shade::before {
+            content: '';
+            position: absolute;
+            top: -5px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 80px;
+            height: 10px;
+            background: #3a3a3a;
+            border-radius: 50%;
+        }
+
+        .lamp-face {
+            position: absolute;
+            top: 30px;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            gap: 20px;
+        }
+
+        .eye {
+            width: 8px;
+            height: 3px;
+            background: #222;
+            border-radius: 50%;
+            transition: all 0.3s ease;
+        }
+
+        .lamp-container:hover .eye {
+            height: 8px;
+        }
+
+        .lamp-pole {
+            width: 12px;
+            height: 150px;
+            background: linear-gradient(to bottom, #5a5a5a, #3a3a3a);
+            margin: 0 auto;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+        }
+
+        .lamp-base {
+            width: 80px;
+            height: 40px;
+            background: linear-gradient(to bottom, #4a4a4a, #2a2a2a);
+            border-radius: 50%;
+            margin: 0 auto;
+            box-shadow: 0 8px 20px rgba(0,0,0,0.4);
+        }
+
+        .pull-string {
+            position: absolute;
+            width: 2px;
+            height: 60px;
+            background: #666;
+            top: 95px;
+            left: 50%;
+            transform: translateX(-50%);
+            transition: height 0.2s ease;
+        }
+
+        .pull-string::after {
+            content: '';
+            position: absolute;
+            bottom: -8px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 12px;
+            height: 12px;
+            background: #888;
+            border-radius: 50%;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.3);
+        }
+
+        .lamp-container:active .pull-string {
+            height: 75px;
+        }
+
+        .light-glow {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 400px;
+            height: 400px;
+            background: radial-gradient(circle, rgba(255,230,100,0.3) 0%, transparent 70%);
+            opacity: 0;
+            transition: opacity 0.5s ease;
+            pointer-events: none;
+        }
+
+        .light-glow.active {
+            opacity: 1;
+        }
+
+        .login-box {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%) scale(0);
+            background: rgba(255, 255, 255, 0.95);
+            padding: 40px;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.5);
+            opacity: 0;
+            transition: all 0.5s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+            z-index: 10;
+            min-width: 350px;
+        }
+
+        .login-box.show {
+            transform: translate(-50%, -50%) scale(1);
+            opacity: 1;
+        }
+
+        .login-box h2 {
+            color: #333;
+            margin-bottom: 10px;
+            text-align: center;
+            font-size: 28px;
+        }
+
+        .welcome-text {
+            color: #666;
+            text-align: center;
+            margin-bottom: 30px;
+            font-size: 16px;
+        }
+
+        .input-group {
+            margin-bottom: 20px;
+        }
+
+        .input-group label {
+            display: block;
+            color: #555;
+            margin-bottom: 8px;
+            font-weight: 500;
+        }
+
+        .input-group input {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #ddd;
+            border-radius: 10px;
+            font-size: 16px;
+            transition: border 0.3s ease;
+        }
+
+        .input-group input:focus {
+            outline: none;
+            border-color: #ffd700;
+        }
+
+        .login-btn {
+            width: 100%;
+            padding: 14px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            border-radius: 10px;
+            font-size: 18px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: transform 0.2s ease, box-shadow 0.3s ease;
+        }
+
+        .login-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px rgba(102, 126, 234, 0.4);
+        }
+
+        .login-btn:active {
+            transform: translateY(0);
+        }
+
+        .success-message {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%) scale(0);
+            background: white;
+            padding: 50px;
+            border-radius: 20px;
+            text-align: center;
+            opacity: 0;
+            transition: all 0.5s ease;
+            z-index: 20;
+        }
+
+        .success-message.show {
+            transform: translate(-50%, -50%) scale(1);
+            opacity: 1;
+        }
+
+        .success-message h1 {
+            color: #4CAF50;
+            font-size: 36px;
+            margin-bottom: 10px;
+        }
+
+        .success-message p {
+            color: #666;
+            font-size: 20px;
+        }
+
+        .checkmark {
+            width: 80px;
+            height: 80px;
+            margin: 0 auto 20px;
+            border-radius: 50%;
+            background: #4CAF50;
+            position: relative;
+        }
+
+        .checkmark::after {
+            content: '';
+            position: absolute;
+            top: 25px;
+            left: 25px;
+            width: 15px;
+            height: 30px;
+            border: solid white;
+            border-width: 0 4px 4px 0;
+            transform: rotate(45deg);
+        }
+    </style>
+</head>
+<body>
+    <div class="light-glow" id="lightGlow"></div>
+    
+    <div class="lamp-container" id="lampContainer">
+        <div class="lamp-shade">
+            <div class="lamp-face">
+                <div class="eye"></div>
+                <div class="eye"></div>
+            </div>
+        </div>
+        <div class="pull-string"></div>
+        <div class="lamp-pole"></div>
+        <div class="lamp-base"></div>
+    </div>
+
+    <div class="login-box" id="loginBox">
+        <h2>🔐 Login</h2>
+        <p class="welcome-text">Lamp ko string pull karke jaagaya hai!</p>
+        <form id="loginForm">
+            <div class="input-group">
+                <label for="username">Username</label>
+                <input type="text" id="username" placeholder="Enter username" required>
+            </div>
+            <div class="input-group">
+                <label for="password">Password</label>
+                <input type="password" id="password" placeholder="Enter password" required>
+            </div>
+            <button type="submit" class="login-btn">Login</button>
+        </form>
+    </div>
+
+    <div class="success-message" id="successMessage">
+        <div class="checkmark"></div>
+        <h1>Welcome!</h1>
+        <p id="welcomeName">Kislay Mishra</p>
+    </div>
+
+    <script>
+        const lampContainer = document.getElementById('lampContainer');
+        const loginBox = document.getElementById('loginBox');
+        const lightGlow = document.getElementById('lightGlow');
+        const loginForm = document.getElementById('loginForm');
+        const successMessage = document.getElementById('successMessage');
+        const welcomeName = document.getElementById('welcomeName');
+        
+        let isLightOn = false;
+
+        lampContainer.addEventListener('click', function() {
+            if (!isLightOn) {
+                isLightOn = true;
+                lightGlow.classList.add('active');
+                document.body.classList.add('light-on');
+                
+                setTimeout(() => {
+                    loginBox.classList.add('show');
+                }, 300);
+            }
+        });
+
+        loginForm.addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const username = document.getElementById('username').value;
+            
+            loginBox.classList.remove('show');
+            
+            setTimeout(() => {
+                welcomeName.textContent = username || 'Kislay Mishra';
+                successMessage.classList.add('show');
+                lightGlow.classList.add('active');
+            }, 500);
+        });
+    </script>
+</body>
+</html>
